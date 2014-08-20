@@ -8,11 +8,10 @@ import (
  "code.google.com/p/go.text/transform"
 )
 
-//  Tokenize normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and returns only a-z0-9 tokens.
-func Tokenize(b []byte) [][]byte {
+//  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and returns only a-z0-9 tokens.
+func AllInOne(b []byte) [][]byte {
 
     buf := make([]byte, len(b))
-    t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
     n, _, _ := t.Transform(buf, b, true)
 	// No error is checked from Transform because I don't care if its corrupt; the show must go on, and it's not like I can fix it
 	
@@ -68,10 +67,10 @@ func Tokenize(b []byte) [][]byte {
 				continue
 			}
 			// Check contractions
-			t := word.Bytes()
+			wb := word.Bytes()
 			switch l {
 				case 1:
-					switch t[0] {
+					switch wb[0] {
 						case 'b': fallthrough
 						case 's': fallthrough
 						case 'd': fallthrough
@@ -83,26 +82,26 @@ func Tokenize(b []byte) [][]byte {
 						case 'j': word = bytes.NewBuffer(make([]byte, 0, 10))
 					}
 				case 2:
-					if (t[0]=='u' && t[1]=='n') || (t[0]=='q' && t[1]=='u') || (t[0]=='g' && t[1]=='l') {
+					if (wb[0]=='u' && wb[1]=='n') || (wb[0]=='q' && wb[1]=='u') || (wb[0]=='g' && wb[1]=='l') {
 						word = bytes.NewBuffer(make([]byte, 0, 10))
 					}
 				case 3:
-					if (t[0]=='a' && t[1]=='l' && t[2]=='l') || (t[0]=='a' && t[1]=='g' && t[2]=='l') {
+					if (wb[0]=='a' && wb[1]=='l' && wb[2]=='l') || (wb[0]=='a' && wb[1]=='g' && wb[2]=='l') {
 						word = bytes.NewBuffer(make([]byte, 0, 10))
 					}
 				case 4:
-					if (t[3]!='l') {
+					if (wb[3]!='l') {
 						continue Outer
 					}
-					if (t[2]!='l' && t[2]!='g') {
+					if (wb[2]!='l' && wb[2]!='g') {
 						continue Outer
 					}
-					switch t[1] {
+					switch wb[1] {
 						case 'a': fallthrough
 						case 'e': fallthrough
 						case 'u': fallthrough
 						case 'o':
-							switch t[0] {
+							switch wb[0] {
 								case 'd': fallthrough
 								case 'n': fallthrough
 								case 's': fallthrough
@@ -150,8 +149,8 @@ func Tokenize(b []byte) [][]byte {
     return tokens
 }
 
-//  TokenizePaginate also splits the results into pages, separated by marker. Mark must consist only of ASCII characters (i.e. 0-127).
-func TokenizePaginate(b []byte, marker []byte) [][][]byte {
+// Paginate also splits the results into pages, separated by marker. Mark must consist only of ASCII characters (i.e. 0-127).
+func Paginate(b []byte, marker []byte) [][][]byte {
 
     buf := make([]byte, len(b))
     t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
@@ -236,10 +235,10 @@ func TokenizePaginate(b []byte, marker []byte) [][][]byte {
 				continue
 			}
 			// Check contractions
-			t := word.Bytes()
+			wb := word.Bytes()
 			switch l {
 				case 1:
-					switch t[0] {
+					switch wb[0] {
 						case 'b': fallthrough
 						case 's': fallthrough
 						case 'd': fallthrough
@@ -251,26 +250,26 @@ func TokenizePaginate(b []byte, marker []byte) [][][]byte {
 						case 'j': word = bytes.NewBuffer(make([]byte, 0, 10))
 					}
 				case 2:
-					if (t[0]=='u' && t[1]=='n') || (t[0]=='q' && t[1]=='u') || (t[0]=='g' && t[1]=='l') {
+					if (wb[0]=='u' && wb[1]=='n') || (wb[0]=='q' && wb[1]=='u') || (wb[0]=='g' && wb[1]=='l') {
 						word = bytes.NewBuffer(make([]byte, 0, 10))
 					}
 				case 3:
-					if (t[0]=='a' && t[1]=='l' && t[2]=='l') || (t[0]=='a' && t[1]=='g' && t[2]=='l') {
+					if (wb[0]=='a' && wb[1]=='l' && wb[2]=='l') || (wb[0]=='a' && wb[1]=='g' && wb[2]=='l') {
 						word = bytes.NewBuffer(make([]byte, 0, 10))
 					}
 				case 4:
-					if (t[3]!='l') {
+					if (wb[3]!='l') {
 						continue Outer
 					}
-					if (t[2]!='l' && t[2]!='g') {
+					if (wb[2]!='l' && wb[2]!='g') {
 						continue Outer
 					}
-					switch t[1] {
+					switch wb[1] {
 						case 'a': fallthrough
 						case 'e': fallthrough
 						case 'u': fallthrough
 						case 'o':
-							switch t[0] {
+							switch wb[0] {
 								case 'd': fallthrough
 								case 'n': fallthrough
 								case 's': fallthrough
@@ -322,7 +321,9 @@ func TokenizePaginate(b []byte, marker []byte) [][][]byte {
     return pages
 }
 
-// Local helper function for normalization of UTF8 strings.
+// Global
+var t = transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
 func isMn (r rune) bool {
 	return unicode.Is(unicode.Mn, r) // Mn: nonspacing marks
 }
+
