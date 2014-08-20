@@ -33,7 +33,7 @@ func Tokenize(b []byte) [][]byte {
 		}
 		
 		// Blank space
-		if r<33 OR r==45 {
+		if r<33 || r==45 {
 			if word.Len()>0 {
 				tokens = append(tokens,word.Bytes())
 				word = bytes.NewBuffer(make([]byte, 0, 10))
@@ -55,16 +55,16 @@ func Tokenize(b []byte) [][]byte {
 			}
 			// No contraction if there are not between 1-4 characters ahead of it
 			l := word.Len()
-			if l==0 OR l>4 {
+			if l==0 || l>4 {
 				continue
 			}
 			// No contraction if the following 2 characters are not letters
 			nxt := buf[i+1]
-			if nxt<65 OR nxt>122 OR (nxt>90 && nxt<97) {
+			if nxt<65 || nxt>122 || (nxt>90 && nxt<97) {
 				continue
 			}
 			nxt = buf[i+2]
-			if nxt<65 OR nxt>122 OR (nxt>90 && nxt<97) {
+			if nxt<65 || nxt>122 || (nxt>90 && nxt<97) {
 				continue
 			}
 			// Check contractions
@@ -201,7 +201,7 @@ func TokenizePaginate(b []byte, marker []byte) [][][]byte {
 		}
 		
 		// Blank space
-		if r<33 OR r==45 {
+		if r<33 || r==45 {
 			if word.Len()>0 {
 				tokens = append(tokens,word.Bytes())
 				word = bytes.NewBuffer(make([]byte, 0, 10))
@@ -223,16 +223,16 @@ func TokenizePaginate(b []byte, marker []byte) [][][]byte {
 			}
 			// No contraction if there are not between 1-4 characters ahead of it
 			l := word.Len()
-			if l==0 OR l>4 {
+			if l==0 || l>4 {
 				continue
 			}
 			// No contraction if the following 2 characters are not letters
 			nxt := buf[i+1]
-			if nxt<65 OR nxt>122 OR (nxt>90 && nxt<97) {
+			if nxt<65 || nxt>122 || (nxt>90 && nxt<97) {
 				continue
 			}
 			nxt = buf[i+2]
-			if nxt<65 OR nxt>122 OR (nxt>90 && nxt<97) {
+			if nxt<65 || nxt>122 || (nxt>90 && nxt<97) {
 				continue
 			}
 			// Check contractions
