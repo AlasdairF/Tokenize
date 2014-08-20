@@ -181,14 +181,14 @@ func Paginate(b []byte, marker []byte) [][][]byte {
 						hit = false
 						break
 					}
-					if hit {
-						tokens = append(tokens,word.Bytes())
-						word = bytes.NewBuffer(make([]byte, 0, 10))
-						pages = append(pages,tokens)
-						tokens = make([][]byte,0,300)
-						i += ml-1
-						continue Outer
-					}
+				}
+				if hit {
+					tokens = append(tokens,word.Bytes())
+					word = bytes.NewBuffer(make([]byte, 0, 10))
+					pages = append(pages,tokens)
+					tokens = make([][]byte,0,300)
+					i += ml-1
+					continue Outer
 				}
 			}
 		}
@@ -322,8 +322,5 @@ func Paginate(b []byte, marker []byte) [][][]byte {
 }
 
 // Global
+func isMn (r rune) bool { return unicode.Is(unicode.Mn, r) }
 var t = transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
-func isMn (r rune) bool {
-	return unicode.Is(unicode.Mn, r) // Mn: nonspacing marks
-}
-
