@@ -12,6 +12,7 @@ import (
 func AllInOne(b []byte) [][]byte {
 
     buf := make([]byte, len(b))
+	t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
     n, _, _ := t.Transform(buf, b, true)
 	// No error is checked from Transform because I don't care if its corrupt; the show must go on, and it's not like I can fix it
 	
@@ -153,6 +154,7 @@ func AllInOne(b []byte) [][]byte {
 func Paginate(b []byte, marker []byte) [][][]byte {
 
     buf := make([]byte, len(b))
+	t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
     n, _, _ := t.Transform(buf, b, true)
 	// No error is checked from Transform because I don't care if its corrupt; the show must go on, and it's not like I can fix it
 	
@@ -320,6 +322,5 @@ func Paginate(b []byte, marker []byte) [][][]byte {
     return pages
 }
 
-// Global
 func isMn (r rune) bool { return unicode.Is(unicode.Mn, r) }
-var t = transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
+
