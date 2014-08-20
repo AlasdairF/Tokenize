@@ -28,7 +28,7 @@ func Tokenize(b []byte) [][]byte {
 		
 		// Write lowercase
 		if r>96 && r<123 {
-			word.WriteByte(r)
+			word.WriteRune(r)
 			continue
 		}
 		
@@ -117,7 +117,7 @@ func Tokenize(b []byte) [][]byte {
 		
 		// Write number
 		if r>47 && r<58 {
-			word.WriteByte(r)
+			word.WriteRune(r)
 			continue
 		}
 		
@@ -196,7 +196,7 @@ func TokenizePaginate(b []byte, marker []byte) [][][]byte {
 		
 		// Write lowercase
 		if r>96 && r<123 {
-			word.WriteByte(r)
+			word.WriteRune(r)
 			continue
 		}
 		
@@ -285,7 +285,7 @@ func TokenizePaginate(b []byte, marker []byte) [][][]byte {
 		
 		// Write number
 		if r>47 && r<58 {
-			word.WriteByte(r)
+			word.WriteRune(r)
 			continue
 		}
 		
