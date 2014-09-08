@@ -47,7 +47,7 @@ Paginate is the same as AllInOne but it also recognizes custom page breaks. Four
 
 For example:
 
-    pages := make([][][],byte, 0, 10)
+    pages := make([][][]byte, 0, 10)
     tokens := make([][]byte, 0, 100)
 	
 	wordfn := func(word []byte) {
