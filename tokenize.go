@@ -8,15 +8,13 @@ import (
  "code.google.com/p/go.text/transform"
 )
 
-//  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and returns only a-z0-9 tokens.
-func AllInOne(b []byte) [][]byte {
+//  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and delivers only a-z0-9 tokens to a function parameter.
+func AllInOne(b []byte, fn_word func([]byte)) {
 
     buf := make([]byte, len(b))
 	t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
     n, _, _ := t.Transform(buf, b, true)
 	// No error is checked from Transform because I don't care if its corrupt; the show must go on, and it's not like I can fix it
-	
-	tokens := make([][]byte,0,n/8)
 	
 	var width int
 	var r rune
@@ -32,10 +30,10 @@ func AllInOne(b []byte) [][]byte {
 			continue
 		}
 		
-		// Blank space
-		if r<33 || r==45 {
+		// Blank space, hyphen or hash
+		if r<33 || r==45 || r==35 {
 			if word.Len()>0 {
-				tokens = append(tokens,word.Bytes())
+				fn_word(word.Bytes())
 				word = bytes.NewBuffer(make([]byte, 0, 10))
 			}
 			continue
@@ -50,7 +48,7 @@ func AllInOne(b []byte) [][]byte {
 		// Contractions
 		if r==39 {
 			// No contraction if its at the end
-			if i==n-2 {
+			if i>=n-2 {
 				continue
 			}
 			// No contraction if there are not between 1-4 characters ahead of it
@@ -144,14 +142,14 @@ func AllInOne(b []byte) [][]byte {
 	
 	// Write the last word
 	if word.Len()>0 {
-		tokens = append(tokens,word.Bytes())
+		fn_word(word.Bytes())
 	}
 	
-    return tokens
+    return
 }
 
-// Paginate also splits the results into pages, separated by marker. Mark must consist only of ASCII characters (i.e. 0-127).
-func Paginate(b []byte, marker []byte) [][][]byte {
+// Paginate is the same as AllInOne except it also recognizes page markers. Markers must consist only of ASCII characters (i.e. 0-127).
+func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func()) {
 
     buf := make([]byte, len(b))
 	t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
@@ -162,9 +160,6 @@ func Paginate(b []byte, marker []byte) [][][]byte {
 	ml := len(marker)
 	maxpl := n - ml
 	
-	pages := make([][][]byte,0,100)
-	tokens := make([][]byte,0,300)
-	
 	var width, i2 int
 	var r rune
     word := bytes.NewBuffer(make([]byte, 0, 10))
@@ -174,8 +169,8 @@ func Paginate(b []byte, marker []byte) [][][]byte {
         r, width = utf8.DecodeRune(buf[i:])
 		
 		// Check for pagination
-		if i<maxpl {
-			if r==first {
+		if r==first {
+			if i<maxpl {
 				hit := true
 				for i2=1; i2<ml; i2++ {
 					if buf[i+i2]!=marker[i2] {
@@ -184,10 +179,11 @@ func Paginate(b []byte, marker []byte) [][][]byte {
 					}
 				}
 				if hit {
-					tokens = append(tokens,word.Bytes())
-					word = bytes.NewBuffer(make([]byte, 0, 10))
-					pages = append(pages,tokens)
-					tokens = make([][]byte,0,300)
+					if word.Len()>0 {
+						fn_word(word.Bytes())
+						word = bytes.NewBuffer(make([]byte, 0, 10))
+					}
+					fn_page()
 					i += ml-1
 					continue Outer
 				}
@@ -200,10 +196,10 @@ func Paginate(b []byte, marker []byte) [][][]byte {
 			continue
 		}
 		
-		// Blank space
-		if r<33 || r==45 {
+		// Blank space, hyphen or hash
+		if r<33 || r==45 || r==35 {
 			if word.Len()>0 {
-				tokens = append(tokens,word.Bytes())
+				fn_word(word.Bytes())
 				word = bytes.NewBuffer(make([]byte, 0, 10))
 			}
 			continue
@@ -218,7 +214,7 @@ func Paginate(b []byte, marker []byte) [][][]byte {
 		// Contractions
 		if r==39 {
 			// No contraction if its at the end
-			if i==n-2 {
+			if i>=n-2 {
 				continue
 			}
 			// No contraction if there are not between 1-4 characters ahead of it
@@ -312,14 +308,10 @@ func Paginate(b []byte, marker []byte) [][][]byte {
 	
 	// Write the last word
 	if word.Len()>0 {
-		tokens = append(tokens,word.Bytes())
-	}
-	// Write the last page
-	if len(tokens)>0 {
-		pages = append(pages,tokens)
+		fn_word(word.Bytes())
 	}
 	
-    return pages
+    return
 }
 
 func isMn (r rune) bool { return unicode.Is(unicode.Mn, r) }
