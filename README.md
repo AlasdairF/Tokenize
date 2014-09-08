@@ -3,17 +3,21 @@
 This Tokenize package contains two functions that are extremely fast and efficient at tokenizing text. No regular expressions are used. No memory leaked (all tokens returned are copies.) The whole thing requires only two loops of the data, the first for normalization and accent removal, the second for everything else.
 
 The features are:
-1. UTF8 normalization
-2. Accent removal, e.g. á -> a
-3. Special characters converted to their common form, e.g. æ -> e
-4. Lowercasing
-5. Hypenated words split
-6. Contractions removed, e.g. l'histoire -> histoire
-7. Resulting tokens contain only letters a-z and digits 0-9
+
+ 1. UTF8 normalization
+ 2. Accent removal, e.g. á -> a
+ 3. Special characters converted to their common form, e.g. æ -> e
+ 4. Lowercasing
+ 5. Hypenated words split
+ 6. Contractions removed, e.g. l'histoire -> histoire
+ 7. Resulting tokens contain only letters a-z and digits 0-9
 
 For example:
+
     Et l'Histore de l'amitè.
+	
 Becomes
+
     et
     histore
     de
