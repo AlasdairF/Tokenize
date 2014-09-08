@@ -34,9 +34,11 @@ The first function is AllInOne, two parameters are required. The first is the []
 For example, if you want to put all words into a slice then you would use:
 
     tokens := make([][]byte, 0, 100)
+    
     wordfn := func(word []byte) {
     	tokens = append(tokens, word)
     }
+    
     tokenize.AllInOne(data, wordfn)
 
 ##Paginate
@@ -45,15 +47,15 @@ Paginate is the same as AllInOne but it also recognizes custom page breaks. Four
 
 For example:
 
-    onpage := 0
     pages := make([][][],byte, 0, 10)
-	tokens := make([][]byte, 0, 100)
+    tokens := make([][]byte, 0, 100)
+	
 	wordfn := func(word []byte) {
     	tokens = append(tokens, word)
     }
 	pagefn := func(word []byte) {
 		pages = append(pages, tokens)
     	tokens := make([][]byte, 0, 100)
-		onpage++
     }
+    
     tokenize.Paginate(data, []byte("[newpage]"), wordfn, pagefn)
