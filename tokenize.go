@@ -150,10 +150,10 @@ func AllInOne(b []byte, fn_word func([]byte)) {
 }
 
 //  AllInOne_Letters is the same as AllInOne but it also ignores numbers and allows UTF8 letters.
-func AllInOne_Letters(b []byte, fn_word func([]byte)) {
+func AllInOne_Letters(buf []byte, fn_word func([]byte)) {
 
-	b = norm.NFC.Bytes(b)
-	n := len(b)
+	buf = norm.NFC.Bytes(buf)
+	n := len(buf)
 	
 	var width int
 	var r rune
@@ -437,10 +437,10 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func()) {
 }
 
 // Paginate_Letters is the same Pageinate but it ignores numbers and allows UTF8 letters.
-func Paginate_Letters(b []byte, marker []byte, fn_word func([]byte), fn_page func()) {
+func Paginate_Letters(buf []byte, marker []byte, fn_word func([]byte), fn_page func()) {
 
-    b = norm.NFC.Bytes(b)
-	n := len(b)
+    buf = norm.NFC.Bytes(buf)
+	n := len(buf)
 	
 	first := rune(marker[0])
 	ml := len(marker)
