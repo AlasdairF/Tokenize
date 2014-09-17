@@ -149,13 +149,11 @@ func AllInOne(b []byte, fn_word func([]byte)) {
     return
 }
 
-//  AllInOne_Letters is the same as AllInOne but it also ignores numbers.
+//  AllInOne_Letters is the same as AllInOne but it also ignores numbers and allows UTF8 letters.
 func AllInOne_Letters(b []byte, fn_word func([]byte)) {
 
-    buf := make([]byte, len(b))
-	t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
-    n, _, _ := t.Transform(buf, b, true)
-	// No error is checked from Transform because I don't care if its corrupt; the show must go on, and it's not like I can fix it
+	b = norm.NFC.Bytes(b)
+	n := len(b)
 	
 	var width int
 	var r rune
@@ -254,23 +252,10 @@ func AllInOne_Letters(b []byte, fn_word func([]byte)) {
 		continue Outer
 		}
 		
-		// Convert some remaining UTF8 characters
+		// Write UTF8 letters as lowercase
 		if r>127 {
-			switch r {
-			 case 'Æ': word.WriteByte('e')
-			 case 'æ': word.WriteByte('e')
-			 case 'Ð': word.WriteByte('d')
-			 case 'ð': word.WriteByte('d')
-			 case 'Ł': word.WriteByte('l')
-			 case 'ł': word.WriteByte('l')
-			 case 'Ø': word.WriteString(`oe`)
-			 case 'ø': word.WriteString(`oe`)
-			 case 'Þ': word.WriteString(`th`)
-			 case 'þ': word.WriteString(`th`)
-			 case 'Œ': word.WriteString(`oe`)
-			 case 'œ': word.WriteString(`oe`)
-			 case 'ß': word.WriteString(`ss`)
-			 case 'ﬁ': word.WriteString(`fi`)
+			if unicode.IsLetter(r) {
+				word.WriteRune(unicode.ToLower(r))
 			}
 		}
 		
@@ -451,13 +436,11 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func()) {
     return
 }
 
-// Paginate_Letters is the same Pageinate but it also ignores numbers.
+// Paginate_Letters is the same Pageinate but it ignores numbers and allows UTF8 letters.
 func Paginate_Letters(b []byte, marker []byte, fn_word func([]byte), fn_page func()) {
 
-    buf := make([]byte, len(b))
-	t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
-    n, _, _ := t.Transform(buf, b, true)
-	// No error is checked from Transform because I don't care if its corrupt; the show must go on, and it's not like I can fix it
+    b = norm.NFC.Bytes(b)
+	n := len(b)
 	
 	first := rune(marker[0])
 	ml := len(marker)
@@ -582,23 +565,10 @@ func Paginate_Letters(b []byte, marker []byte, fn_word func([]byte), fn_page fun
 		continue Outer
 		}
 		
-		// Convert some remaining UTF8 characters
+		// Write UTF8 letters as lowercase
 		if r>127 {
-			switch r {
-			 case 'Æ': word.WriteByte('e')
-			 case 'æ': word.WriteByte('e')
-			 case 'Ð': word.WriteByte('d')
-			 case 'ð': word.WriteByte('d')
-			 case 'Ł': word.WriteByte('l')
-			 case 'ł': word.WriteByte('l')
-			 case 'Ø': word.WriteString(`oe`)
-			 case 'ø': word.WriteString(`oe`)
-			 case 'Þ': word.WriteString(`th`)
-			 case 'þ': word.WriteString(`th`)
-			 case 'Œ': word.WriteString(`oe`)
-			 case 'œ': word.WriteString(`oe`)
-			 case 'ß': word.WriteString(`ss`)
-			 case 'ﬁ': word.WriteString(`fi`)
+			if unicode.IsLetter(r) {
+				word.WriteRune(unicode.ToLower(r))
 			}
 		}
 		
