@@ -135,6 +135,7 @@ func AllInOne(b []byte, fn_word func([]byte)) {
 			 case 'Œ': word.WriteString(`oe`)
 			 case 'œ': word.WriteString(`oe`)
 			 case 'ß': word.WriteString(`ss`)
+			 case 'ﬁ': word.WriteString(`fi`)
 			}
 		}
 		
@@ -301,6 +302,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func()) {
 			 case 'Œ': word.WriteString(`oe`)
 			 case 'œ': word.WriteString(`oe`)
 			 case 'ß': word.WriteString(`ss`)
+			 case 'ﬁ': word.WriteString(`fi`)
 			}
 		}
 		
