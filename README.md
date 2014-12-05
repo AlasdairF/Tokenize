@@ -47,6 +47,8 @@ Removes all numbers.
     stripForeign
 Removes all non ASCII characters after accent removal (i.e. it leaves only A-Z-a-z0-9).
 
+##Recommended
+
 Recommended settings for tokenization of English are: `lowercase, stripAccents, stripForeign`
 
 Recommended settings for tokenization of continental European languages are: `lowercase, stripAccents, stripContractions, stripForeign`
