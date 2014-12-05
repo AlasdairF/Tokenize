@@ -24,7 +24,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 		n = len(buf)
 	}
 	
-	var width int
+	var width, l int
 	var r rune
     word := bytes.NewBuffer(make([]byte, 0, 20))
 
@@ -40,8 +40,11 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 		
 		// Blank space, hyphen, hash or em
 		if r <= 32 || r == '#' || r == '-' || r == '—' {
-			if word.Len()>0 {
-				fn_word(word.Bytes())
+			l = word.Len()
+			if l > 0 {
+				cpy := make([]byte, l)
+				copy(cpy, word.Bytes())
+				fn_word(cpy)
 				word.Reset()
 			}
 			continue
