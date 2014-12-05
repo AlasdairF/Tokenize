@@ -53,9 +53,9 @@ For example:
 	wordfn := func(word []byte) {
     	tokens = append(tokens, word)
     }
-	pagefn := func(word []byte) {
+	pagefn := func() {
 		pages = append(pages, tokens)
-    	tokens = make([][]byte, 0, 100)
+		tokens = make([][]byte, 0, 100)
     }
     
     tokenize.Paginate(data, []byte("[newpage]"), wordfn, pagefn)
