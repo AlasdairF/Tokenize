@@ -191,7 +191,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 		n = len(buf)
 	}
 	
-	var width int
+	var width, i2 int
 	var r rune
 	var hit bool
     word := bytes.NewBuffer(make([]byte, 0, 20))
