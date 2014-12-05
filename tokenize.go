@@ -237,8 +237,11 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 		
 		// Blank space, hyphen or hash
 		if r <= 32 || r == '#' || r == '-' || r == '—' {
-			if word.Len()>0 {
-				fn_word(word.Bytes())
+			l = word.Len()
+			if l > 0 {
+				cpy := make([]byte, l)
+				copy(cpy, word.Bytes())
+				fn_word(cpy)
 				word.Reset()
 			}
 			continue
