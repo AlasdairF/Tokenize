@@ -59,7 +59,7 @@ All non-letters and non-numbers, such as punctuation and whitespace are always s
 
 ##AllInOne
 
-The first function is AllInOne, two parameters are required. The first is the []byte data to process, the second is the function for what to with each token.
+The first parameter is the []byte data to process, the second is the function for what to with each token. Then the options.
 
 For example, if you want to put all words into a slice then you would use:
 
