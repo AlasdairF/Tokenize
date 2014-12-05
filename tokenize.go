@@ -20,7 +20,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 		t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
 		n, _, _ = t.Transform(buf, b, true)
 	} else {
-		buf = norm.NFC.Bytes(buf)
+		buf = norm.NFC.Bytes(b)
 		n = len(buf)
 	}
 	
@@ -187,7 +187,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 		t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
 		n, _, _ = t.Transform(buf, b, true)
 	} else {
-		buf = norm.NFC.Bytes(buf)
+		buf = norm.NFC.Bytes(b)
 		n = len(buf)
 	}
 	
