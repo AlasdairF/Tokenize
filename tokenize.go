@@ -173,8 +173,11 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
     }
 	
 	// Write the last word
-	if word.Len()>0 {
-		fn_word(word.Bytes())
+	l = word.Len()
+	if l > 0 {
+		cpy := make([]byte, l)
+		copy(cpy, word.Bytes())
+		fn_word(cpy)
 	}
 	
     return
@@ -194,7 +197,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 		n = len(buf)
 	}
 	
-	var width, i2 int
+	var width, i2, l int
 	var r rune
 	var hit bool
     word := bytes.NewBuffer(make([]byte, 0, 20))
@@ -370,8 +373,11 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
     }
 	
 	// Write the last word
-	if word.Len() > 0 {
-		fn_word(word.Bytes())
+	l = word.Len()
+	if l > 0 {
+		cpy := make([]byte, l)
+		copy(cpy, word.Bytes())
+		fn_word(cpy)
 	}
 	
     return
