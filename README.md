@@ -35,11 +35,11 @@ The optional parameters are:
 
     stripAccents			removes accents, e.g. á -> a.
 
-    stripContractions			removes contractions, e.g. `l'histore` to `histore`.
+    stripContractions		removes contractions, e.g. `l'histore` to `histore`.
 
     stripNumbers			removes all numbers
 
-    stripForeign			removes all non ASCII characters after accent removal (i.e. it leaves only A-Z-a-z0-9).
+    stripForeign			leaves only a-zA-Z0-9 (after accent removal)
 
 ##Recommended
 
