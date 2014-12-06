@@ -33,9 +33,9 @@ The optional parameters are:
 
     lowercase				converts all letters to lowercase
 
-    stripAccents			removes accents, e.g. á -> a.
+    stripAccents			removes accents, e.g. á -> a
 
-    stripContractions		removes contractions, e.g. `l'histore` to `histore`.
+    stripContractions		removes contractions, e.g. l'histore -> histore
 
     stripNumbers			removes all numbers
 
