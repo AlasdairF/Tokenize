@@ -31,23 +31,29 @@ Becomes
 
 The optional parameters are:
 
-    lowercase			converts all letters to lowercase
+    lowercase				converts all letters to lowercase
 
-    stripAccents		removes accents, e.g. á -> a.
+    stripAccents			removes accents, e.g. á -> a.
 
-    stripContractions		removes contractions, e.g. `l'histore` to `histore`.
+    stripContractions			removes contractions, e.g. `l'histore` to `histore`.
 
-    stripNumbers		removes all numbers
+    stripNumbers			removes all numbers
 
-    stripForeign		removes all non ASCII characters after accent removal (i.e. it leaves only A-Z-a-z0-9).
+    stripForeign			removes all non ASCII characters after accent removal (i.e. it leaves only A-Z-a-z0-9).
 
 ##Recommended
 
-Recommended settings for tokenization of English are: `lowercase, stripAccents, stripForeign`
+Recommended settings for tokenization of English are:
 
-Recommended settings for tokenization of continental European languages are: `lowercase, stripAccents, stripContractions, stripForeign`
+    lowercase, stripAccents, stripForeign
 
-Recommended settings for tokenization of international scripts are: `lowercase, stripContractions`
+Recommended settings for tokenization of continental European languages are:
+
+    lowercase, stripAccents, stripContractions, stripForeign
+
+Recommended settings for tokenization of international scripts are:
+
+    lowercase, stripContractions
 
 All non-letters and non-numbers, such as punctuation and whitespace are always stripped.
 
