@@ -61,7 +61,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 		}
 		
 		// Contractions
-		if stripContractions && r == 39 {
+		if stripContractions && (r == 39 || r == '’') {
 			// No contraction if its at the end
 			if i >= n - 2 {
 				continue
