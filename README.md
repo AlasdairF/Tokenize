@@ -4,14 +4,13 @@ This Tokenize package contains two functions that are extremely fast and efficie
 
 ##Features
 
- 1. UTF8 normalization
- 2. Accent removal, e.g. á -> a
- 3. Special characters converted to their common form, e.g. æ -> e
- 4. Lowercasing
- 5. Hypenated words split
- 6. Contractions removed, e.g. l'histoire -> histoire
- 7. Resulting tokens contain only letters a-z and digits 0-9
- 8. All UTF8 scripts are supported.
+ * UTF8 normalization
+ * Accent removal, e.g. á -> a
+ * Special characters converted to their common form, e.g. æ -> e
+ * Lowercasing
+ * Hypenated words split
+ * Contractions removed, e.g. l'histoire -> histoire
+ * All UTF8 scripts are supported.
 
 For example:
 
