@@ -31,20 +31,15 @@ Becomes
 
 The optional parameters are:
 
-    lowercase
-Converts all letters to lowercase.
+    lowercase			converts all letters to lowercase
 
-    stripAccents
-Removes accents, e.g. á -> a.
+    stripAccents		removes accents, e.g. á -> a.
 
-    stripContractions
-Removes contractions, e.g. `l'histore` to `histore`.
+    stripContractions		removes contractions, e.g. `l'histore` to `histore`.
 
-    stripNumbers
-Removes all numbers.
+    stripNumbers		removes all numbers
 
-    stripForeign
-Removes all non ASCII characters after accent removal (i.e. it leaves only A-Z-a-z0-9).
+    stripForeign		removes all non ASCII characters after accent removal (i.e. it leaves only A-Z-a-z0-9).
 
 ##Recommended
 
