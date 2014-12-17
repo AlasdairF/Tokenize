@@ -4,25 +4,19 @@ import (
  "bytes"
  "unicode"
  "unicode/utf8"
- "code.google.com/p/go.text/unicode/norm"
- "code.google.com/p/go.text/transform"
+ "github.com/AlasdairF/Deaccent"
 )
-
-func isMn (r rune) bool { return unicode.Is(unicode.Mn, r) }
 
 //  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and delivers only a-z0-9 tokens to a function parameter.
 func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
 	
 	var buf []byte
-	var n int
 	if stripAccents {
-		buf = make([]byte, len(b))
-		t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
-		n, _, _ = t.Transform(buf, b, true)
+		buf = deaccent.Bytes(b)
 	} else {
-		buf = norm.NFC.Bytes(b)
-		n = len(buf)
+		buf = b
 	}
+	n := len(buf)
 	
 	var width, l int
 	var r rune
@@ -187,15 +181,12 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
 	
 	var buf []byte
-	var n int
 	if stripAccents {
-		buf = make([]byte, len(b))
-		t := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
-		n, _, _ = t.Transform(buf, b, true)
+		buf = deaccent.Bytes(b)
 	} else {
-		buf = norm.NFC.Bytes(b)
-		n = len(buf)
+		buf = b
 	}
+	n := len(buf)
 	
 	var width, i2, l int
 	var r rune
