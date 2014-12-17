@@ -12,7 +12,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 	
 	var buf []byte
 	if stripAccents {
-		buf = deaccent.Bytes(b)
+		buf, _ = deaccent.Bytes(b)
 	} else {
 		buf = b
 	}
@@ -182,7 +182,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 	
 	var buf []byte
 	if stripAccents {
-		buf = deaccent.Bytes(b)
+		buf, _ = deaccent.Bytes(b)
 	} else {
 		buf = b
 	}
