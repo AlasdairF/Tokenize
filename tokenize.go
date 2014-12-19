@@ -10,13 +10,10 @@ import (
 //  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and delivers only a-z0-9 tokens to a function parameter.
 func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
 	
-	var buf []byte
 	if stripAccents {
-		buf, _ = deaccent.Bytes(b)
-	} else {
-		buf = b
+		b, _ = deaccent.Bytes(b)
 	}
-	n := len(buf)
+	n := len(b)
 	
 	var width, l int
 	var r rune
@@ -24,7 +21,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 
 	Outer:
     for i:=0; i<n; i+=width {
-        r, width = utf8.DecodeRune(buf[i:])
+        r, width = utf8.DecodeRune(b[i:])
 		
 		// Write lowercase
 		if r > 96 && r < 123 {
@@ -66,11 +63,11 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 				continue
 			}
 			// No contraction if the following 2 characters are not letters
-			nxt := buf[i+1]
+			nxt := b[i+1]
 			if nxt < 65 || nxt > 122 || (nxt > 90 && nxt < 97) {
 				continue
 			}
-			nxt = buf[i+2]
+			nxt = b[i+2]
 			if nxt < 65 || nxt > 122 || (nxt > 90 && nxt < 97) {
 				continue
 			}
@@ -180,13 +177,10 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 // Paginate is the same as AllInOne except it also recognizes page markers. Markers must consist only of ASCII characters (i.e. 0-127).
 func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
 	
-	var buf []byte
 	if stripAccents {
-		buf, _ = deaccent.Bytes(b)
-	} else {
-		buf = b
+		b, _ = deaccent.Bytes(b)
 	}
-	n := len(buf)
+	n := len(b)
 	
 	var width, i2, l int
 	var r rune
@@ -199,21 +193,24 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 
 	Outer:
     for i:=0; i<n; i+=width {
-        r, width = utf8.DecodeRune(buf[i:])
+        r, width = utf8.DecodeRune(b[i:])
 		
 		// Check for pagination
 		if r == first {
 			if i < maxpl {
 				hit = true
 				for i2=1; i2<ml; i2++ {
-					if buf[i+i2] != marker[i2] {
+					if b[i+i2] != marker[i2] {
 						hit = false
 						break
 					}
 				}
 				if hit {
-					if word.Len() > 0 {
-						fn_word(word.Bytes())
+					l = word.Len()
+					if l > 0 {
+						cpy := make([]byte, l)
+						copy(cpy, word.Bytes())
+						fn_word(cpy)
 						word.Reset()
 					}
 					fn_page()
@@ -263,11 +260,11 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 				continue
 			}
 			// No contraction if the following 2 characters are not letters
-			nxt := buf[i+1]
+			nxt := b[i+1]
 			if nxt < 65 || nxt > 122 || (nxt > 90 && nxt < 97) {
 				continue
 			}
-			nxt = buf[i+2]
+			nxt = b[i+2]
 			if nxt < 65 || nxt > 122 || (nxt > 90 && nxt < 97) {
 				continue
 			}
