@@ -33,9 +33,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 		if r <= 32 || r == '#' || r == '-' || r == '—' {
 			l = word.Len()
 			if l > 0 {
-				cpy := make([]byte, l)
-				copy(cpy, word.Bytes())
-				fn_word(cpy)
+				fn_word(word.Bytes())
 				word.Reset()
 			}
 			continue
@@ -166,9 +164,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 	// Write the last word
 	l = word.Len()
 	if l > 0 {
-		cpy := make([]byte, l)
-		copy(cpy, word.Bytes())
-		fn_word(cpy)
+		fn_word(word.Bytes())
 	}
 	
     return
@@ -208,9 +204,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 				if hit {
 					l = word.Len()
 					if l > 0 {
-						cpy := make([]byte, l)
-						copy(cpy, word.Bytes())
-						fn_word(cpy)
+						fn_word(word.Bytes())
 						word.Reset()
 					}
 					fn_page()
@@ -230,9 +224,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 		if r <= 32 || r == '#' || r == '-' || r == '—' {
 			l = word.Len()
 			if l > 0 {
-				cpy := make([]byte, l)
-				copy(cpy, word.Bytes())
-				fn_word(cpy)
+				fn_word(word.Bytes())
 				word.Reset()
 			}
 			continue
@@ -363,9 +355,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 	// Write the last word
 	l = word.Len()
 	if l > 0 {
-		cpy := make([]byte, l)
-		copy(cpy, word.Bytes())
-		fn_word(cpy)
+		fn_word(word.Bytes())
 	}
 	
     return
