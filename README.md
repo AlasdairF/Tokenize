@@ -1,6 +1,9 @@
 ##Tokenize
 
-This Tokenize package contains two functions that are extremely fast and efficient at tokenizing text. No regular expressions are used. No memory leaked (all tokens returned are copies.) The whole thing requires only two loops of the data, the first for normalization and accent removal, the second for everything else.
+This Tokenize package contains two functions that are extremely fast and efficient at tokenizing text. No regular expressions are used. The whole thing requires only two loops of the data, the first for normalization and accent removal, the second for everything else.
+
+##Warning
+The same underlying array is used for each token, this means you **must** copy the slice of bytes sent to the `wordfn` function if you intend to save the slices. Please see my [Unleak](http://github.com/AlasdairF/Unleak) package for an easy one-liner implementation of this. If you are counting the token occurances with my [BinSearch](http://github.com/AlasdairF/BinSearch) package or the native `map` implementation then it is not necessary to copy the slice since these implementations make their own copies.
 
 ##Features
 
@@ -66,7 +69,7 @@ For example, if you want to put all words into a slice then you would use:
     tokens := make([][]byte, 0, 100)
     
     wordfn := func(word []byte) {
-    	tokens = append(tokens, word)
+    	tokens = append(tokens, unleak.Bytes(word)) // using my Unleak package to make a copy of the slice
     }
     
     lowercase, stripAccents, stripContractions, stripNumbers, stripForeign := true, true, true, false, true
@@ -82,7 +85,7 @@ For example:
     tokens := make([][]byte, 0, 100)
 	
 	wordfn := func(word []byte) {
-    	tokens = append(tokens, word)
+    	tokens = append(tokens, unleak.Bytes(word))
     }
 	pagefn := func() {
 		pages = append(pages, tokens)
