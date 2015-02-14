@@ -12,7 +12,7 @@ The same underlying array is used for each token, this means you **must** copy t
  * Special characters converted to their common form, e.g. æ -> e
  * Lowercasing
  * Hypenated words split
- * Contractions removed, e.g. l'histoire -> histoire
+ * Contractions removed, e.g. l'histoire -> histoire (but they're -> theyre)
  * All UTF8 scripts are supported.
 
 For example:
