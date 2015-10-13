@@ -170,7 +170,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 }
 
 //  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and delivers only a-z0-9 tokens to a function parameter.
-func WithProvidedBuffer(word bytes.Buffer, b []byte, fn_word func([]byte), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
+func WithProvidedBuffer(word *bytes.Buffer, b []byte, fn_word func([]byte), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
 	
 	if stripAccents {
 		b, _ = deaccent.Bytes(b)
