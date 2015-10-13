@@ -162,9 +162,170 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
     }
 	
 	// Write the last word
-	l = word.Len()
-	if l > 0 {
+	if word.Len() > 0 {
 		fn_word(word.Bytes())
+	}
+	
+    return
+}
+
+//  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and delivers only a-z0-9 tokens to a function parameter.
+func WithProvidedBuffer(word bytes.Buffer, b []byte, fn_word func([]byte), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
+	
+	if stripAccents {
+		b, _ = deaccent.Bytes(b)
+	}
+	n := len(b)
+	
+	var width, l int
+	var r rune
+
+	Outer:
+    for i:=0; i<n; i+=width {
+        r, width = utf8.DecodeRune(b[i:])
+		
+		// Write lowercase
+		if r > 96 && r < 123 {
+			word.WriteRune(r)
+			continue
+		}
+		
+		// Blank space, hyphen, hash or em
+		if r <= 32 || r == '#' || r == '-' || r == '—' {
+			l = word.Len()
+			if l > 0 {
+				fn_word(word.Bytes())
+				word.Reset()
+			}
+			continue
+		}
+		
+		// Write uppercase as lowercase
+		if r > 64 && r < 91 {
+			if lowercase {
+				word.WriteRune(r + 32)
+			} else {
+				word.WriteRune(r)
+			}
+			continue
+		}
+		
+		// Contractions
+		if stripContractions && (r == 39 || r == '’') {
+			// No contraction if its at the end
+			if i >= n - 2 {
+				continue
+			}
+			// No contraction if there are not between 1-4 characters ahead of it
+			l := word.Len()
+			if l == 0 || l > 4 {
+				continue
+			}
+			// No contraction if the following 2 characters are not letters
+			nxt := b[i+1]
+			if nxt < 65 || nxt > 122 || (nxt > 90 && nxt < 97) {
+				continue
+			}
+			nxt = b[i+2]
+			if nxt < 65 || nxt > 122 || (nxt > 90 && nxt < 97) {
+				continue
+			}
+			// Check contractions
+			wb := word.Bytes()
+			switch l {
+				case 1:
+					switch wb[0] {
+						case 'b': fallthrough
+						case 's': fallthrough
+						case 'd': fallthrough
+						case 'n': fallthrough
+						case 'l': fallthrough
+						case 'm': fallthrough
+						case 't': fallthrough
+						case 'v': fallthrough
+						case 'j': word.Reset()
+					}
+				case 2:
+					if (wb[0] == 'u' && wb[1] == 'n') || (wb[0] == 'q' && wb[1] == 'u') || (wb[0] == 'g' && wb[1] == 'l') {
+						word.Reset()
+					}
+				case 3:
+					if (wb[0] == 'a' && wb[1] == 'l' && wb[2] == 'l') || (wb[0] == 'a' && wb[1] == 'g' && wb[2] == 'l') {
+						word.Reset()
+					}
+				case 4:
+					if (wb[3] != 'l') {
+						continue Outer
+					}
+					if (wb[2] != 'l' && wb[2] != 'g') {
+						continue Outer
+					}
+					switch wb[1] {
+						case 'a': fallthrough
+						case 'e': fallthrough
+						case 'u': fallthrough
+						case 'o':
+							switch wb[0] {
+								case 'd': fallthrough
+								case 'n': fallthrough
+								case 's': fallthrough
+								case 'c': fallthrough
+								case 'p': word.Reset()
+							}
+						
+					}
+			}
+		continue Outer
+		}
+		
+		// Write number
+		if !stripNumbers && r > 47 && r < 58 {
+			word.WriteRune(r)
+			continue
+		}
+		
+		// Convert some remaining UTF8 characters
+		if r > 127 {
+			if stripForeign {
+				switch r {
+				 case 'Æ': word.WriteByte('e')
+				 case 'æ': word.WriteByte('e')
+				 case 'Ð': word.WriteByte('d')
+				 case 'ð': word.WriteByte('d')
+				 case 'Ł': word.WriteByte('l')
+				 case 'ł': word.WriteByte('l')
+				 case 'Ø': word.WriteString(`oe`)
+				 case 'ø': word.WriteString(`oe`)
+				 case 'Þ': word.WriteString(`th`)
+				 case 'þ': word.WriteString(`th`)
+				 case 'Œ': word.WriteString(`oe`)
+				 case 'œ': word.WriteString(`oe`)
+				 case 'ß': word.WriteString(`ss`)
+				 case 'ﬁ': word.WriteString(`fi`)
+				}
+			} else {
+				if unicode.IsLetter(r) {
+					if lowercase {
+						word.WriteRune(unicode.ToLower(r))
+					} else {
+						word.WriteRune(r)
+					}
+				} else {
+					if !stripNumbers {
+						if unicode.IsNumber(r) {
+							word.WriteRune(r)
+						}
+					}
+				}
+			}
+		}
+		
+    }
+	
+	// Write the last word
+	if word.Len() > 0 {
+		fn_word(word.Bytes())
+		word.Reset()
 	}
 	
     return
