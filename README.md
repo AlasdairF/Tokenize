@@ -77,9 +77,10 @@ For example, if you want to put all words into a slice then you would use:
 
 ## WithProvidedBuffer
 
-Exactly the same as AllInOne but accepts the reuse of the bytes.Buffer. This is much faster if you are repeatedly using this package on small chunks of data.
+Exactly the same as AllInOne but accepts the reuse of the `buffer.Buffer`. This is much faster if you are repeatedly using this package on small chunks of data.
 
-    buf := bytes.NewBuffer(make([]byte, 0, 20))
+    import "github.com/AlasdairF/Buffer"
+    buf := buffer.NewBuffer(32)
     tokenize.WithProvidedBuffer(buf, data, wordfn, lowercase, stripAccents, stripContractions, stripNumbers, stripForeign)
 
 ##Paginate
