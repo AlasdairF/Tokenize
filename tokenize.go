@@ -17,7 +17,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 	
 	var width, l int
 	var r rune
-    word := buffer.NewBuffer(32)
+    word := buffer.NewBuffer(20)
 
 	Outer:
     for i:=0; i<n; i+=width {
