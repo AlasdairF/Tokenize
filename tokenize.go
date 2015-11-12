@@ -4,7 +4,7 @@ import (
  "unicode"
  "unicode/utf8"
  "github.com/AlasdairF/Deaccent"
- "github.com/AlasdairF/Buffer"
+ "github.com/AlasdairF/Custom"
 )
 
 //  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and delivers only a-z0-9 tokens to a function parameter.
@@ -17,7 +17,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 	
 	var width, l int
 	var r rune
-    word := buffer.NewBuffer(20)
+    word := custom.NewBuffer(20)
 
 	Outer:
     for i:=0; i<n; i+=width {
@@ -170,7 +170,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 }
 
 //  AllInOne normalizes UTF8, remove accents, converts special chars, lowercases, split hypens, removes contractions, and delivers only a-z0-9 tokens to a function parameter.
-func WithProvidedBuffer(word *buffer.Buffer, b []byte, fn_word func([]byte), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
+func WithProvidedBuffer(word *custom.Buffer, b []byte, fn_word func([]byte), lowercase, stripAccents, stripContractions, stripNumbers, stripForeign bool) {
 	
 	if stripAccents {
 		b, _ = deaccent.Bytes(b)
@@ -342,7 +342,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 	var width, i2, l int
 	var r rune
 	var hit bool
-    word := buffer.NewBuffer(32)
+    word := custom.NewBuffer(32)
 	
 	first := rune(marker[0])
 	ml := len(marker)
