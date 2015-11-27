@@ -18,6 +18,7 @@ func AllInOne(b []byte, fn_word func([]byte), lowercase, stripAccents, stripCont
 	var width, l int
 	var r rune
     word := custom.NewBuffer(20)
+	defer word.Close()
 
 	Outer:
     for i:=0; i<n; i+=width {
@@ -343,6 +344,7 @@ func Paginate(b []byte, marker []byte, fn_word func([]byte), fn_page func(), low
 	var r rune
 	var hit bool
     word := custom.NewBuffer(32)
+	defer word.Close()
 	
 	first := rune(marker[0])
 	ml := len(marker)
