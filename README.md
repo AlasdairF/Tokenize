@@ -3,7 +3,7 @@
 This Tokenize package contains three functions that are extremely fast and efficient at tokenizing text. No regular expressions are used. The whole thing requires only two loops of the data, the first for UTF8 normalization and accent removal, the second for everything else.
 
 ##Warning
-The same underlying array is used for each token, this means you **must** copy the slice of bytes sent to the `wordfn` function if you intend to save the slices. Please see my [Unleak](http://github.com/AlasdairF/Unleak) package for an easy one-liner implementation of this. If you are counting the token occurances with my [BinSearch](http://github.com/AlasdairF/BinSearch) package or the native `map` implementation then it is not necessary to copy the slice since these implementations make their own copies.
+The same underlying array is used for each token, this means you **must** copy the slice of bytes sent to the `wordfn` function if you intend to save the slices. Please see my [Unleak](http://github.com/AlasdairF/Unleak) package for an easy one-liner implementation of this. If you are counting the token occurances with my [BinSearch](http://github.com/AlasdairF/BinSearch) package, with the native `map` implementation, or you are converting the slice of bytes to a string then it is not necessary to copy the slice since these implementations make their own copies.
 
 ##Features
 
